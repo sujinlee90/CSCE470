@@ -6,33 +6,6 @@ import json
 import os
 import collections
 from operator import itemgetter
-
-users={}
-
-def dictionary_list(tweets, index,counts):
-		for twt in tweets:
-			print len(twt)
-			counts =counts+len(twt)
-			print counts
-			for data in twt:
-				username = data['user']
-				if username not in users:
-					users[username] = [0]*50
-				users[username][index] += 1
-		return counts
-				
-def tokenize(text):
-    """
-    Take a string and split it into tokens on word boundaries.
-      
-    A token is defined to be one or more alphanumeric characters,
-    underscores, or apostrophes.  Remove all other punctuation, whitespace, and
-    empty tokens.  Do case-folding to make everything lowercase. This function
-    should return a list of the tokens in the input string.
-    """
-    tokens = re.findall("[\w']+", text.lower())
-    return [porter2.stem(token) for token in tokens]
-	
 	
 def read_data(filename):
     """
@@ -44,99 +17,87 @@ def read_data(filename):
             for line in f:
                 data.append(json.loads(line.strip()))
     except:
-        print "Failed to read data!"
+        print filename, ": Failed to read data!"
         return []
     print "The json file has been successfully read!"
     return data
 
-def dif_tvshows(list):
-	n = 0
-	for count in list:
-		if count > 0:
-			n += 1
-	return n
-
-class Cluster():
+class Recommender():
 	def __init__(self):
-    	# put your final clustering results 
-    	# in the variable self.results with the format
-    	# {index of cluster: [tweet_id]} 
-    	# e.g. {1:[122312312,3421421231], 2:[87862321,2121321986],...}
-		self.results = {}
+		users = {}
+    	#List of the names of the JSON files containing the tweets about the TV shows
+		### Maybe this list needs to be updated
+		list_tvshows = ["AmericanHorrorStory.json","Arrow.json","BreakingBad.json","Dracula.json","GameOfThrones.json","HowIMetYourMother.json","OnceUponATime.json","OrangeIsTheNewBlack.json","TheWalkingDead.json","TheBigBangThoery.json","TheVampireDiaries.json","Homeland.json","ModernFamily.json","GraysAnatomy.json","DoctorWho.json","PrettyLittleLiars.json","SonsOfAnarchy.json","Supernatural.json","AgentsOfSHIELD.json","TheBlacklist.json","TheOriginals.json","BoardwalkEmpire.json","Ravenswood.json","Revolution.json","Reign.json","Revenge.json","MastersOfSex.json","WitchesOfEastEnd.json","SleepyHollow.json","TrueDetective.json","Sherlock.json","Dexter.json","Bones.json","TheMentalist.json","Glee.json","NCIS.json","DowntonAbbey.json","OnceUponATimeInWonderland.json","Castle.json","TheCarrieDiaries.json","TrueBlood.json","Suits.json","Scandal.json","NewGirl.json","UnderTheDome.json","PersonOfInterest.json","CriminalMinds.json","WhiteCollar.json","TheTomorrowPeople.json"]
 	
-	
-
+	def process_tweets(self, data, index):
+		for tweets in data:
+			for tweet in tweets:
+				username = tweet['user']
+				#If the user is not in the users list yet, add the user to
+				#the dictionary (using the username as token and creating a
+				#vector that will store the number of tweets the user posted
+				#about each TV show.
+				if username not in users:
+					users[username] = [0]*50
+				#Adding a mention to the respective TV show (indicated by the index)
+				users[username][index] += 1
 		
+	#Count the number of different TV shows that were cited on the list of tweets
+	#from a certain user. The parameter passed to the function is a vector with the
+	#number of tweets for each TV show.
+	def count_dif_tvshows(list):
+		n_tvshows = 0
+		#count is the number of tweets about a certain TV show
+		for count in list:
+			#if count > 0, it means that the user mentioned the TV show at least once
+			#if not, it means that there is no tweet about that TV show posted by this user
+			if count > 0:
+				n_tvshows += 1
+		return n_tvshows
+	
 	def index_tweets(self):
+		index = 0	#Index number of the TV show on the list
+
+		tweets_count = []	#Number of tweets for each TV show
 		
-		data = []
-		data1=[]
-		tv_show={}
-		index = 0
-		list
-		"""
-		read_tvshows = read_data('jsonfiles.json')
-		
-		print read_tvshows['tvshows']
-	"""
-	
-		list_tvshows= ["AgentsOfShield.json", "AmericanHorrorStory.json", "Arrow.json", "BoardWalkEmpire.json", "Castle.json", "CriminalMinds.json", "Dexter.json", "DoctorWho.json", "DowntonAbbey.json", "GameOfThrones.json", "Glee.json", "GraysAnatomy.json", "HowIMetYourMother.json", "MastersOfSex.json", "ModernFamily.json", "NCIS.json", "NewGirl.json", "OnceUponATime.json", "OnceUponATimeInWonderland.json", "OrangeIsTheNewBlack.json", "PersonOfInterest.json", "PrettyLittleLiars.json", "Ravenswood.json", "Reign.json, Revenge.json", "Revolution.json", "Scandal.json", "Sherlock.json", "SleepyHollow.json", "SonsOfAnarchy.json", "Suits.json", "Supernatural.json", "TheBigBangTheory.json", "TheBlacklist.json", "TheCarrieDiaries.json", "TheMentalist.json", "TheOriginals.json", "TheTomorrowPeople.json", "TheVampireDiaries.json", "TheWalkingDead.json", "TrueBlood.json", "TrueDetective.json", "UnderTheDome.json", "WhiteCollar.json", "WitchesOfEastEnd.json"]
-		
-		
-		temp =["AmericanHorrorStory.json","Arrow.json","BreakingBad.json","Dracula.json","GameOfThrones.json","HowIMetYourMother.json","OnceUponATime.json","OrangeIsTheNewBlack.json","TheWalkingDead.json","TheBigBangThoery.json","TheVampireDiaries.json","Homeland.json","ModernFamily.json","GraysAnatomy.json","DoctorWho.json","PrettyLittleLiars.json","SonsOfAnarchy.json","Supernatural.json","AgentsOfSHIELD.json","TheBlacklist.json","TheOriginals.json","BoardwalkEmpire.json","ravenswood.json","Revolution.json","Reign.json","Revenge.json","MastersOfSex.json","WitchesOfEastEnd.json","SleepyHollow.json","TrueDetective.json","Sherlock.json","Dexter.json","Bones.json","TheMentalist.json","Glee.json","NCIS.json","DowntonAbbey.json","OnceUponATimeInWonderland.json","Castle.json","TheCarrieDiaries.json","TrueBlood.json","Suits.json","Scandal.json","NewGirl.json","UnderTheDome.json","PersonOfInterest.json","CriminalMinds.json","WhiteCollar.json","TheTomorrowPeople.json"]
-		tweets_count = []
-		counts=0
-		for x in temp:
-			print x
-			tweets=read_data(x)
-			print "len" ,len(tweets)
+		for tv_show in list_tvshows:
+			#Extracting the tweets from the json file
+			tweets = read_data(tv_show)
+			print "Number of tweets: ", len(tweets)
 			
 			tweets_count.append(len(tweets))
-			index+=1
-			counts = dictionary_list(tweets,index,counts)
+			
+			#Calculating the index of the TV show
+			index += 1
+			
+			process_tweets(tweets, index)
 		
-			
-			
-		dif_count = [0]*len(users) 
+		#Creating a vector (Python list) to store the number of
+		#different TV shows each user mentioned
+		number_dif_tvshows = [0]*len(users) 
 		i = 0
+		#For each user, calculate the number of different TV shows his/her tweets mention
 		for user in users:
-			dif_count[i] = dif_tvshows(users[user])
+			number_dif_tvshows[i] = count_dif_tvshows(users[user])
 			i += 1
-			
-		users_dif_count = [0]*50 		
+		
+		#Creating a vector (Python list) to store the number of
+		#different users that mentioned n different TV shows
+		#Example: if number_users_n_dif_tvshows[3] = 100, it means
+		#that 100 users twitted about 3 different TV shows
+		number_users_n_dif_tvshows = [0]*len(list_tvshows)	
 		for user in users:
-			users_dif_count[dif_tvshows(users[user])] += 1
+			number_users_n_dif_tvshows[count_dif_tvshows(users[user])] += 1
+
+		print 'Number of users: ', len(users)
+		print number_users_n_dif_tvshows
+		
+		#Saving the data in a file
+		datas = [tweets_count, number_dif_tvshows]
+		f = open('results.txt', 'w')
+		json.dump(datas, f )
 
 		
-		
-		print 'users', len(users)
-		print users_dif_count
-		
-		datas =[tweets_count, dif_count]
-		print counts , "data"
-		f = open('data1.txt', 'w')
-		
-		json.dump(datas, f )
-		
-		
-				
-				
-				
-	
-			
-			
-			
-				
-		
-		
-		
-		
-	
-		
-		
-		#print final_list1
-        
 if __name__ == "__main__":
-	api= Cluster()
-	api.index_tweets()
-        
+	rec = Recommender()
+	rec.index_tweets()

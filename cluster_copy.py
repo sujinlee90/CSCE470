@@ -29,6 +29,7 @@ class Recommender():
 	    ### Maybe this list needs to be updated
 	    self.list_tvshows = ["AmericanHorrorStory.json","Arrow.json","BreakingBad.json","Dracula.json","GameOfThrones.json","HowIMetYourMother.json","OnceUponATime.json","OrangeIsTheNewBlack.json","TheWalkingDead.json","TheBigBangThoery.json","TheVampireDiaries.json","Homeland.json","ModernFamily.json","GraysAnatomy.json","DoctorWho.json","PrettyLittleLiars.json","SonsOfAnarchy.json","Supernatural.json","AgentsOfSHIELD.json","TheBlacklist.json","TheOriginals.json","BoardwalkEmpire.json","Ravenswood.json","Revolution.json","Reign.json","Revenge.json","MastersOfSex.json","WitchesOfEastEnd.json","SleepyHollow.json","TrueDetective.json","Sherlock.json","Dexter.json","Bones.json","TheMentalist.json","Glee.json","NCIS.json","DowntonAbbey.json","OnceUponATimeInWonderland.json","Castle.json","TheCarrieDiaries.json","TrueBlood.json","Suits.json","Scandal.json","NewGirl.json","UnderTheDome.json","PersonOfInterest.json","CriminalMinds.json","WhiteCollar.json","TheTomorrowPeople.json"]
 	    self.sum_tvshows = [0]*50
+	    self.tweet = {}
 	
 	def process_tweets(self, data, index):
 	    for tweets in data:
@@ -38,10 +39,15 @@ class Recommender():
 			#the dictionary (using the username as token and creating a
 			#vector that will store the number of tweets the user posted
 			#about each TV show.
-			if username not in self.users:
-			    self.users[username] = [0]*50
+		    if username not in self.users:
+			self.users[username] = [0]*50
                         #Adding a mention to the respective TV show (indicated by the index)
 			self.users[username][index] += 1
+		    text = tweet['text']
+		    if not self.tweet.has_key(index):
+                        self.tweet[index] = []
+                    self.tweet[index].append({'user':username,'text':text})
+                        
 		
 	#Count the number of different TV shows that were cited on the list of tweets
 	#from a certain user. The parameter passed to the function is a vector with the
@@ -113,19 +119,16 @@ class Recommender():
                         for i in range(0, len(self.list_tvshows)):
                             self.sum_tvshows[i] = self.sum_tvshows[i] + self.users[user][i]
 
-        def print_user_mentions_tvshow(self, tv_show1, tv_show2, count):
+        def print_user_mentions_tvshow(self, tv_show):
             """
-            find users who mention both tv_show1 and tv_show2 and print the users' mention
+            find users who mention both tv_show and print the users' mention
             count is the number of user
             """
             the_number_of_users = 0
-            tv_show1_index = self.list_tvshows.index(tv_show1)
-            tv_show2_index = self.list_tvshows.index(tv_show2)
-
-            while(the_number_of_users < count):
-                for user in self.users:
-                    if (self.users[tv_show1_index] != 0) & (self.users[tv_show2_index] != 0):
-                        print 'User:', user, ', Text:' # need to find text
+            tvshow_index = self.list_tvshows.index(tv_show)
+            # print 10 users who mentioned the tv show
+            for i in range(0,10):
+                print 'User:', self.tweet[index][i]['user'], ', Text:', self.tweet[index][i]['text']
 
         def recommend_tvshows(self, tv_show):
             """
@@ -143,11 +146,11 @@ class Recommender():
             top_5_tvshows = shorted_tvshows[:5]
             
             #find users who mentioned tv shows in ranking top 5 and print users' text
-            print_user_mentions_tvshow(tv_show, top_5_tvshows.keys()[0]) #print users' mention for top 1
-            print_user_mentions_tvshow(tv_show, top_5_tvshows.keys()[1]) #print users' mention for top 2
-            print_user_mentions_tvshow(tv_show, top_5_tvshows.keys()[2]) #print users' mention for top 3
-            print_user_mentions_tvshow(tv_show, top_5_tvshows.keys()[3]) #print users' mention for top 4
-            print_user_mentions_tvshow(tv_show, top_5_tvshows.keys()[4]) #print users' mention for top 5
+            print_user_mentions_tvshow(top_5_tvshows.keys()[0]) #print users' mention for top 1
+            print_user_mentions_tvshow(top_5_tvshows.keys()[1]) #print users' mention for top 2
+            print_user_mentions_tvshow(top_5_tvshows.keys()[2]) #print users' mention for top 3
+            print_user_mentions_tvshow(top_5_tvshows.keys()[3]) #print users' mention for top 4
+            print_user_mentions_tvshow(top_5_tvshows.keys()[4]) #print users' mention for top 5
             
 		
 if __name__ == "__main__":

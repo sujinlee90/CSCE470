@@ -38,7 +38,7 @@ class Recommender():
 				#vector that will store the number of tweets the user posted
 				#about each TV show.
 				if username not in users:
-					users[username] = [0]*50
+					users[username] = [0]*len(list_tvshows)
 				#Adding a mention to the respective TV show (indicated by the index)
 				users[username][index] += 1
 		
@@ -94,6 +94,8 @@ class Recommender():
 		
 		#Saving the data in a file
 		datas = [tweets_count, number_dif_tvshows]
+		f = open('results.txt', 'w')
+		json.dump(datas, f )datas = [tweets_count, number_dif_tvshows]
 		f = open('results.txt', 'w')
 		json.dump(datas, f )
 

@@ -156,3 +156,5 @@ class Recommender():
 if __name__ == "__main__":
 	rec = Recommender()
 	rec.index_tweets()
+	rec.make_sum_table("BreakingBad.json")
+	rec.recommend_tvshows("BreakingBad.json")

@@ -1,10 +1,8 @@
 from __future__ import division
 import re
-from stemming import porter2
 import math
 import json
 import os
-import collections
 import operator
 
 def read_data(filename):

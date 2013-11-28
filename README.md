@@ -7,7 +7,7 @@ TV show recommender
 Running Tests:
 ==============
 
-You will need the folder jsonfile_Chicago and recommender.py.
+You will need the folder jsonfile_Chicago and the file recommender.py.
 Running recommender.py, the console should present as a result:
 Top 5 TV show recommendations for Breaking Bad (Chicago area) and some tweets about the first one.
 

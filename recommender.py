@@ -114,20 +114,20 @@ class Recommender():
         """
 
     def make_sum_table(self, tv_show):
-            """
-            This function used to find users who mentioned same tv show as the user and mentioned other tv shows.
-            Then, sum all counts from the users.
-            """
-            #find index for tv show the user searches
-            tv_show_index = self.list_tvshows.index(tv_show)
-            print  "tv_show_index = ", tv_show_index, tv_show
+        """
+        This function used to find users who mentioned same tv show as the user and mentioned other tv shows.
+        Then, sum all counts from the users.
+        """
+        #find index for tv show the user searches
+        tv_show_index = self.list_tvshows.index(tv_show)
+        print  "tv_show_index = ", tv_show_index, tv_show
 
-            #find user who mentioned the tv show and mentioned more than or equal to two tv shows
-            for user, tv_show_n_mentions in self.users.iteritems():
-                if tv_show_n_mentions[tv_show_index] != 0:
-                    if self.count_dif_tvshows(tv_show_n_mentions) > 1:
-                        for i in range(0, len(self.list_tvshows)):
-                            self.sum_tvshows[i] = self.sum_tvshows[i] + tv_show_n_mentions[i]
+        #find user who mentioned the tv show and mentioned more than or equal to two tv shows
+        for user, tv_show_n_mentions in self.users.iteritems():
+            if tv_show_n_mentions[tv_show_index] != 0:
+                if self.count_dif_tvshows(tv_show_n_mentions) > 1:
+                    for i in range(0, len(self.list_tvshows)):
+                        self.sum_tvshows[i] = self.sum_tvshows[i] + tv_show_n_mentions[i]
 
     def get_user_mentions_tvshow(self, tv_show):
         """

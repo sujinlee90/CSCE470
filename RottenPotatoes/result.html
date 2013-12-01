@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% autoescape true %}
 <html lang="en">
 <head>
 <title>Rotten Potatoes</title>
@@ -33,7 +34,7 @@
     <!--<span style="position:relative">--->
 	
 	<form action="/result?tv_show={{ tv_show }}&location={{ location }}" method="get">
-     TV show: <input type="text" name="tv_show" value={{ tv_show }}/>
+     TV show: <input type="text" name="tv_show"/>
     Location: <select name="location">																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							
 	        <option value="NY">New York</option>
 			<option value="LA">Los Angeles</option>
@@ -59,12 +60,12 @@
   <div class="container">
     <div class="inside">
       <div class="wrapper">
-        <div style="position:relative; top: 0px; left: 83px; height: 410px; width:200;">
+        <div style="position:relative; top: 0px; left: 83px; height: 410px; width:300;">
 		<article class="col-1"> <img src="images/1page-title1.gif" class="title">
           <ul class="list">
-          <li><a href="#"><img src="newimage/img11.jpg"style="width:120px; height:150px">How I Met Your Mother</a></li>
-            <li><a href="#"><img src="newimage/img22.jpg" style="width:120px; height:150px">Agents of S.H.I.E.L.D.</a></li>
-            <li><a href="#"><img src="newimage/img33.jpg" style="width:120px; height:150px">Homeland</a></li>
+          {% for result in results_list %}
+          <li><a href="#"><img src={{ result.small_cover }} style="width:120px; height:150px">{{ result.title }}</a></li>
+            {% endfor %}
           </ul>
         </article>
 		</div>
@@ -117,3 +118,4 @@
 <!-- END PAGE SOURCE -->
 
 </html>
+{% endautoescape %}

@@ -155,10 +155,13 @@ class Recommender():
         index = self.list_tvshows.index(tv_show)
         return self.tv_shows_info[index]["file_name"]
      
-    def get_tv_show_info(self, tvshow_id):
+    def get_tv_show_info(self, tvshow_id, file_name):
         access = imdb.IMDb()
         movie = access.get_movie(tvshow_id)
-        return {"title": movie['title'], "year": movie['year'], "genres": movie['genres'], "plot": movie['plot outline'], "small_cover": movie['cover url'], "big_cover": movie['full-size cover url']}
+        small_cover = "small" + file_name + ".jpg"
+        big_cover = "big" + file_name + ".jpg"
+        return {"title": movie['title'], "year": movie['year'], "genres": movie['genres'], "plot": movie['plot outline'], "small_cover": small_cover, "big_cover": big_cover}
+        #return {"title": movie['title'], "year": movie['year'], "genres": movie['genres'], "plot": movie['plot outline'], "small_cover": movie['cover url'], "big_cover": movie['full-size cover url']}
             
     def recommend_tvshows(self, tv_show, location):
         """
@@ -200,11 +203,13 @@ class Recommender():
             result.append(item[1][0])
         result_list = []
         
-        """
+        
         #Creating a json file with the detailed info about all the TV shows
+        """
         for r in self.list_tvshows:
             index = self.list_tvshows.index(r)
-            result_list.append(self.get_tv_show_info(self.tv_shows_info[index]["id"]))
+            file_name = self.get_file_name(r)
+            result_list.append(self.get_tv_show_info(self.tv_shows_info[index]["id"], file_name))
         datas = [result_list]
         f = open('results.txt', 'w')
         json.dump(datas, f )

@@ -13,6 +13,18 @@
 <script type="text/javascript" src="js/jquery-1.4.2.min.js" ></script>
 <script src="js/rollover.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/script.js"></script>
+
+
+<script>
+function gets_images(source_image, tv_shows, description ,location)
+{
+
+document.getElementById("demo").src = source_image;
+document.getElementById("demo1").innerHTML  = tv_shows;
+document.getElementById("desp").innerHTML  = description;
+document.getElementById("demo2").innerHTML  = location;
+}
+</script>
 <!--[if lt IE 7]>
 <link rel="stylesheet" href="css/ie6.css" type="text/css" media="screen">
 <script type="text/javascript" src="js/ie_png.js"></script>
@@ -64,7 +76,7 @@
 		<article class="col-1"> <img src="images/1page-title1.gif" class="title">
           <ul class="list">
           {% for result in results_list %}
-          <li><a href="#"><img src={{ result.small_cover }} style="width:120px; height:150px">{{ result.title }}</a></li>
+          <li><a href="#"  onclick= "gets_images('{{ result.small_cover }}', '{{result.title}}', '{{result.plot}}',  '{{location}}')" ><img src={{ result.small_cover }}   style="width:120px; height:150px">{{ result.title }}</a></li>
             {% endfor %}
           </ul>
         </article>
@@ -72,23 +84,27 @@
         <article class="col-2">
            <div style="position:relative; top: -480px; left: 83px; height: 410px;" >
                <table><tr><td>
-              <img alt="" src="newimage/img22.jpg" style="position:relative; top: 71px; left: 6px; width: 180px; height:270px" />
+              <img  id= "demo" alt="" src="#" style="position:relative; top: 71px; left: 6px; width: 180px; height:270px" />
                </td><td>
 			   <div align="center">
 			   <br><br><br><br><br><br><br><br><br>
-			   <h2><b>Marvel's Agents of S.H.I.E.L.D.</b></h2>
+			   <h2 id ="demo1"><b>{{ tv_show }}</b></h2>
 			   <br>
 
-<p><b>Year:</b> 2013</p>
+		<p id="demo2"><b>Year:</b> {{location}}</p>
 
-<p><b>Plot:</b> The missions of the Strategic Homeland Intervention, Enforcement and Logistics Division.</p>
-               </div></td></table>
+		<p id="desp" style="text-align:center;" > The missions of the Strategic Homeland Intervention, Enforcement and Logistics Division.</p>
+               </div></td></table>	
 			   <br>
 			   <br>
 			   <br><br><br><br>
 			   <br>
-			   <h2><b>What people are saying about this TV show:</b></h2>
-			   <br><br>
+			  {% for resultss in comments_list %} 
+			   <h2>{{resultss}}</h2><br>
+			  {% endfor %}
+			   
+			   <!--
+			   <br>
 			   <p>Dharcalias: RT @uhxkatie: I really wish the Agents of Shield tv show was better. It really had alot of potential.</p>
 				<hr>
 
@@ -99,7 +115,7 @@
 				<hr>
 
 				<p>MrrPaco: And catching up on "Its always sunny" and "Agents of shield"</p>
-
+				-->
 				</textarea>
            </div>
        </article>

@@ -152,7 +152,7 @@ class Recommender():
         result = []
         # print 10 users who mentioned the tv show
         for i in range(0,10):
-            result.append('User:' + self.tweet_text[tvshow_index][i]['user'] + ', Text:' + self.tweet_text[tvshow_index][i]['text'].encode('utf-8'))
+            result.append('User:' + self.tweet_text[tvshow_index][i]['user'] + '-' + self.tweet_text[tvshow_index][i]['text']) # .encode('utf-8')
         return result
 
     def get_folder_name(self, location):
@@ -243,10 +243,10 @@ class Result(webapp2.RequestHandler):
         
         rec = Recommender()
         result = rec.recommend_tvshows(tv_show, location)
+        result_comments = rec.get_user_mentions_tvshow(tv_show);
+        #result = [{"name": "tv11"}, {"name": "tv22"}, {"name": "tv33"}]	
         
-        #result = [{"name": "tv11"}, {"name": "tv22"}, {"name": "tv33"}]
-        
-        template_values = {'tv_show': tv_show,'location': location, 'results_list': result}
+        template_values = {'tv_show': tv_show,'location': location, 'results_list': result , 'comments_list': result_comments}
 		
         template = JINJA_ENVIRONMENT.get_template('result.html')
         self.response.write(template.render(template_values))

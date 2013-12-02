@@ -158,8 +158,8 @@ class Recommender():
     def get_tv_show_info(self, tvshow_id, file_name):
         access = imdb.IMDb()
         movie = access.get_movie(tvshow_id)
-        small_cover = "small" + file_name + ".jpg"
-        big_cover = "big" + file_name + ".jpg"
+        small_cover = "./Pictures/" + file_name.replace(" ", "") + "_small.jpg"
+        big_cover = "./Pictures/" + file_name.replace(" ", "") + "_big.jpg"
         return {"title": movie['title'], "year": movie['year'], "genres": movie['genres'], "plot": movie['plot outline'], "small_cover": small_cover, "big_cover": big_cover}
         #return {"title": movie['title'], "year": movie['year'], "genres": movie['genres'], "plot": movie['plot outline'], "small_cover": movie['cover url'], "big_cover": movie['full-size cover url']}
             

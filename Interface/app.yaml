@@ -1,0 +1,41 @@
+application: csce470-rottenpotatoes
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /css
+  static_dir: css
+- url: /files
+  static_dir: files
+- url: /images
+  static_dir: images
+- url: /js
+  static_dir: js
+- url: /newimage
+  static_dir: newimage
+- url: /themes
+  static_dir: themes
+- url: /Pictures
+  static_dir: Pictures
+- url: /NewYork_tweets
+  static_dir: NewYork_tweets
+- url: /LosAngeles_tweets
+  static_dir: LosAngeles_tweets
+- url: /Chicago_tweets
+  static_dir: Chicago_tweets
+- url: /Houston_tweets
+  static_dir: Houston_tweets
+- url: /Philadelphia_tweets
+  static_dir: Philadelphia_tweets
+
+- url: /.*
+  script: test.application
+  
+libraries:
+- name: webapp2
+  version: latest
+
+- name: jinja2
+  version: latest

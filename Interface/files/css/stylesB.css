@@ -1,0 +1,36 @@
+
+h1
+{
+
+color: gray;
+}
+body
+{
+background: black;
+}
+div a {
+	
+	background:white;
+	width: 150px;
+ 	text-decoration:none;
+	display:block;
+	padding: 4px;
+	color:blue;
+	text-align:center;
+	border-top:2px solid silver;
+	border-right:2px solid silver;
+	border-bottom:2px solid silver;
+	border-left:2px solid silver;
+}
+ 
+div a:hover {
+	background:red;
+	border-top:2x solid silver;
+	border-right:2x solid silver;
+	border-bottom:2x solid silver;
+	border-left:2x solid silver;
+	color:white
+}
+
+
+

@@ -49,6 +49,16 @@ class Recommender():
         data = read_data("tv_shows_detailed.json")
         self.tv_shows_detailed = data[0][0]
         
+        """
+        #Finding differences between the titles on the two files
+        print len(self.tv_shows_info), " ", len(self.tv_shows_detailed)
+        for t in self.tv_shows_detailed:
+            print t["title"]
+        for index, tvshow in enumerate(self.tv_shows_info):
+            if(tvshow["title"] != self.tv_shows_detailed[index]["title"]):
+                print tvshow["title"], " ", self.tv_shows_detailed[index]["title"]
+        """
+        
         self.sum_tvshows = [0]*len(self.list_tvshows)
         self.tweet_text = {}
     
@@ -127,20 +137,20 @@ class Recommender():
         """
 
     def make_sum_table(self, tv_show):
-            """
-            This function used to find users who mentioned same tv show as the user and mentioned other tv shows.
-            Then, sum all counts from the users.
-            """
-            #find index for tv show the user searches
-            tv_show_index = self.list_tvshows.index(tv_show)
-            print  "tv_show_index = ", tv_show_index, tv_show
+        """
+        This function used to find users who mentioned same tv show as the user and mentioned other tv shows.
+        Then, sum all counts from the users.
+        """
+        #find index for tv show the user searches
+        tv_show_index = self.list_tvshows.index(tv_show)
+        print  "tv_show_index = ", tv_show_index, tv_show
 
-            #find user who mentioned the tv show and mentioned more than or equal to two tv shows
-            for user, tv_show_n_mentions in self.users.iteritems():
-                if tv_show_n_mentions[tv_show_index] != 0:
-                    if self.count_dif_tvshows(tv_show_n_mentions) > 1:
-                        for i in range(0, len(self.list_tvshows)):
-                            self.sum_tvshows[i] = self.sum_tvshows[i] + tv_show_n_mentions[i]
+        #find user who mentioned the tv show and mentioned more than or equal to two tv shows
+        for user, tv_show_n_mentions in self.users.iteritems():
+            if tv_show_n_mentions[tv_show_index] != 0:
+                if self.count_dif_tvshows(tv_show_n_mentions) > 1:
+                    for i in range(0, len(self.list_tvshows)):
+                        self.sum_tvshows[i] = self.sum_tvshows[i] + tv_show_n_mentions[i]
 
     def get_user_mentions_tvshow(self, tv_show):
         """
@@ -150,9 +160,12 @@ class Recommender():
         the_number_of_users = 0
         tvshow_index = self.list_tvshows.index(tv_show)
         result = []
-        # print 10 users who mentioned the tv show
-        for i in range(0,10):
-            result.append('User:' + self.tweet_text[tvshow_index][i]['user'] + '-' + self.tweet_text[tvshow_index][i]['text']) # .encode('utf-8')
+        # print 5 users who mentioned the tv show
+        for i in range(0,5):
+            text = self.tweet_text[tvshow_index][i]['text']
+            text = text.replace("'", "")
+            text = text.replace("\n", "")
+            result.append('User:' + self.tweet_text[tvshow_index][i]['user'] + ', Text:' + text)
         return result
 
     def get_folder_name(self, location):
@@ -167,7 +180,16 @@ class Recommender():
     def get_file_name(self, tv_show):
         index = self.list_tvshows.index(tv_show)
         return self.tv_shows_info[index]["file_name"]
-        
+     
+    def get_tv_show_info(self, tvshow_id, title, file_name):
+        access = imdb.IMDb()
+        movie = access.get_movie(tvshow_id)
+        small_cover = "./Pictures/" + file_name.replace(" ", "") + "_small.jpg"
+        big_cover = "./Pictures/" + file_name.replace(" ", "") + "_big.jpg"
+        plot = movie['plot outline'].replace("'", "")
+        return {"title": title, "year": movie['year'], "genres": movie['genres'], "plot": plot, "small_cover": small_cover, "big_cover": big_cover}
+        #return {"title": movie['title'], "year": movie['year'], "genres": movie['genres'], "plot": movie['plot outline'], "small_cover": movie['cover url'], "big_cover": movie['full-size cover url']}
+            
     def recommend_tvshows(self, tv_show, location):
         """
         make TV show ranking
@@ -193,10 +215,11 @@ class Recommender():
         print "\nSome tweets about the first TV show:\n"
         
         #find users who mentioned tv shows in ranking top 5 and print users' text
-        #print self.get_user_mentions_tvshow(sorted_tvshows[0]) #print users' mention for top 1
+        print self.get_user_mentions_tvshow(sorted_tvshows[0]) #print users' mention for top 1
         
         index = self.list_tvshows.index(sorted_tvshows[0])
-        #print self.get_tv_show_info(self.tv_shows_info[index]["id"])#self.tv_shows_info[index]["id"])
+        file_name = self.get_file_name(dic_tvshows.keys()[0])
+        #print self.get_tv_show_info(self.tv_shows_info[index]["id"], file_name)#self.tv_shows_info[index]["id"])
         #self.print_user_mentions_tvshow(sorted_tvshows.keys()[1]) #print users' mention for top 2
         #self.print_user_mentions_tvshow(sorted_tvshows.keys()[2]) #print users' mention for top 3
         #self.print_user_mentions_tvshow(sorted_tvshows.keys()[3]) #print users' mention for top 4
@@ -208,11 +231,13 @@ class Recommender():
             result.append(item[1][0])
         result_list = []
         
-        """
+        
         #Creating a json file with the detailed info about all the TV shows
+        """
         for r in self.list_tvshows:
             index = self.list_tvshows.index(r)
-            result_list.append(self.get_tv_show_info(self.tv_shows_info[index]["id"]))
+            file_name = self.get_file_name(r)
+            result_list.append(self.get_tv_show_info(self.tv_shows_info[index]["id"], self.tv_shows_info[index]["title"], file_name))
         datas = [result_list]
         f = open('results.txt', 'w')
         json.dump(datas, f )
@@ -241,10 +266,13 @@ class Result(webapp2.RequestHandler):
         tv_show = self.request.get('tv_show')
         location = self.request.get('location')
         
+        print "Tvshow: ", tv_show
+        
         rec = Recommender()
         result = rec.recommend_tvshows(tv_show, location)
-        result_comments = rec.get_user_mentions_tvshow(tv_show);
-        #result = [{"name": "tv11"}, {"name": "tv22"}, {"name": "tv33"}]	
+        result_comments = []
+        for r in result:
+            result_comments.append(rec.get_user_mentions_tvshow(r["title"]))
         
         template_values = {'tv_show': tv_show,'location': location, 'results_list': result , 'comments_list': result_comments}
 		

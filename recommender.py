@@ -36,6 +36,16 @@ class Recommender():
         data = read_data("tv_shows_detailed.json")
         self.tv_shows_detailed = data[0][0]
         
+        """
+        #Finding differences between the titles on the two files
+        print len(self.tv_shows_info), " ", len(self.tv_shows_detailed)
+        for t in self.tv_shows_detailed:
+            print t["title"]
+        for index, tvshow in enumerate(self.tv_shows_info):
+            if(tvshow["title"] != self.tv_shows_detailed[index]["title"]):
+                print tvshow["title"], " ", self.tv_shows_detailed[index]["title"]
+        """
+        
         self.sum_tvshows = [0]*len(self.list_tvshows)
         self.tweet_text = {}
     
@@ -137,9 +147,12 @@ class Recommender():
         the_number_of_users = 0
         tvshow_index = self.list_tvshows.index(tv_show)
         result = []
-        # print 10 users who mentioned the tv show
-        for i in range(0,10):
-            result.append('User:' + self.tweet_text[tvshow_index][i]['user'] + ', Text:' + self.tweet_text[tvshow_index][i]['text'].encode('utf-8'))
+        # print 5 users who mentioned the tv show
+        for i in range(0,5):
+            text = self.tweet_text[tvshow_index][i]['text']
+            text = text.replace("'", "")
+            text = text.replace("\n", "")
+            result.append('User:' + self.tweet_text[tvshow_index][i]['user'] + ', Text:' + text)
         return result
 
     def get_folder_name(self, location):
@@ -155,12 +168,13 @@ class Recommender():
         index = self.list_tvshows.index(tv_show)
         return self.tv_shows_info[index]["file_name"]
      
-    def get_tv_show_info(self, tvshow_id, file_name):
+    def get_tv_show_info(self, tvshow_id, title, file_name):
         access = imdb.IMDb()
         movie = access.get_movie(tvshow_id)
         small_cover = "./Pictures/" + file_name.replace(" ", "") + "_small.jpg"
         big_cover = "./Pictures/" + file_name.replace(" ", "") + "_big.jpg"
-        return {"title": movie['title'], "year": movie['year'], "genres": movie['genres'], "plot": movie['plot outline'], "small_cover": small_cover, "big_cover": big_cover}
+        plot = movie['plot outline'].replace("'", "")
+        return {"title": title, "year": movie['year'], "genres": movie['genres'], "plot": plot, "small_cover": small_cover, "big_cover": big_cover}
         #return {"title": movie['title'], "year": movie['year'], "genres": movie['genres'], "plot": movie['plot outline'], "small_cover": movie['cover url'], "big_cover": movie['full-size cover url']}
             
     def recommend_tvshows(self, tv_show, location):
@@ -191,7 +205,8 @@ class Recommender():
         print self.get_user_mentions_tvshow(sorted_tvshows[0]) #print users' mention for top 1
         
         index = self.list_tvshows.index(sorted_tvshows[0])
-        #print self.get_tv_show_info(self.tv_shows_info[index]["id"])#self.tv_shows_info[index]["id"])
+        file_name = self.get_file_name(dic_tvshows.keys()[0])
+        #print self.get_tv_show_info(self.tv_shows_info[index]["id"], file_name)#self.tv_shows_info[index]["id"])
         #self.print_user_mentions_tvshow(sorted_tvshows.keys()[1]) #print users' mention for top 2
         #self.print_user_mentions_tvshow(sorted_tvshows.keys()[2]) #print users' mention for top 3
         #self.print_user_mentions_tvshow(sorted_tvshows.keys()[3]) #print users' mention for top 4
@@ -209,7 +224,7 @@ class Recommender():
         for r in self.list_tvshows:
             index = self.list_tvshows.index(r)
             file_name = self.get_file_name(r)
-            result_list.append(self.get_tv_show_info(self.tv_shows_info[index]["id"], file_name))
+            result_list.append(self.get_tv_show_info(self.tv_shows_info[index]["id"], self.tv_shows_info[index]["title"], file_name))
         datas = [result_list]
         f = open('results.txt', 'w')
         json.dump(datas, f )
@@ -223,4 +238,4 @@ class Recommender():
          
 if __name__ == "__main__":
     rec = Recommender()
-    print rec.recommend_tvshows("Breaking Bad", "NY")
+    print rec.recommend_tvshows("Dexter", "NY")

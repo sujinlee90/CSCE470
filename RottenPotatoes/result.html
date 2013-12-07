@@ -1,137 +1,209 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html lang="en">
-<head>
-<title>Rotten Potatoes</title>
-<meta charset="utf-8">
-<link rel="stylesheet" href="css/reset.css" type="text/css" media="all">
-<link rel="stylesheet" href="css/layout.css" type="text/css" media="all">
-<link rel="stylesheet" href="css/style.css" type="text/css" media="all">
- <link href="themes/1/js-image-slider.css" rel="stylesheet" type="text/css" />
-    <script src="themes/1/js-image-slider.js" type="text/javascript"></script>
-    <link href="generic.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/jquery-1.4.2.min.js" ></script>
-<script src="js/rollover.js" type="text/javascript"></script>
-<script type="text/javascript" src="js/script.js"></script>
-
-
-<script>
-function gets_images(source_image, tv_shows, description ,location)
-{
-
-document.getElementById("demo").src = source_image;
-document.getElementById("demo1").innerHTML  = tv_shows;
-document.getElementById("desp").innerHTML  = description;
-document.getElementById("demo2").innerHTML  = location;
-}
-</script>
-<!--[if lt IE 7]>
-<link rel="stylesheet" href="css/ie6.css" type="text/css" media="screen">
-<script type="text/javascript" src="js/ie_png.js"></script>
-<script type="text/javascript">ie_png.fix('.png, h1 a, .box');</script>
-<![endif]-->
-<!--[if lt IE 9]><script type="text/javascript" src="js/html5.js"></script><![endif]-->
-</head>
-<body id="page1" >
-<!-- START PAGE SOURCE -->
-
-<header>
-  <div style="height:280px;width:100%;text-align:center;">
-       <img src="newimage/logot.gif" style="position:relative; top: 127px; left: 0px; height: 111px; width: 545px;" />
-      
-  </div>
-  <div style="height:10px;width:100%;text-align:center;">
-           
-            <!--  <form action="#" id="search-form">-->
-    <!--<span style="position:relative">--->
-	
-	<form action="/result?tv_show={{ tv_show }}&location={{ location }}" method="get">
-     TV show: <input type="text" name="tv_show"/>
-    Location: <select name="location">																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							
-	        <option value="NY">New York</option>
-			<option value="LA">Los Angeles</option>
-			<option value="CH">Chicago</option>
-			<option value="HO">Houston</option>
-			<option value="PH">Philadelphia</option>
-
-        </select>
-		<input type="submit" value="Search">
-	</form>
-           <!-- </form>-->
-                 </div>
-  <nav>
-      <ul>
-        <li><a href="index.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('m1','','images/m1-act.gif',1)"><img src="images/m1.gif" id="m1"></a></li>
-        <li><a href="about-us.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('m2','','images/m2-act.gif',1)"><img src="images/m2.gif" id="m2"></a></li>
-    
-      </ul>
-    </nav>
- 
-</header>
-<section id="content">
-  <div class="container">
-    <div class="inside">
-      <div class="wrapper">
-        <div style="position:relative; top: 0px; left: 83px; height: 410px; width:300;">
-		<article class="col-1"> <img src="images/1page-title1.gif" class="title">
-          <ul class="list">
-          {% for result in results_list %}
-          <li><a href="#"  onclick= "gets_images('{{ result.small_cover }}', '{{result.title}}', '{{result.plot}}',  '{{location}}')" ><img src={{ result.small_cover }}   style="width:120px; height:150px">{{ result.title }}</a></li>
-            {% endfor %}
-          </ul>
-        </article>
-		</div>
-        <article class="col-2">
-           <div style="position:relative; top: -480px; left: 83px; height: 410px;" >
-               <table><tr><td>
-              <img  id= "demo" alt="" src="#" style="position:relative; top: 71px; left: 6px; width: 180px; height:270px" />
-               </td><td>
-			   <div align="center">
-			   <br><br><br><br><br><br><br><br><br>
-			   <h2 id ="demo1"><b>{{ tv_show }}</b></h2>
-			   <br>
-
-		<p id="demo2"><b>Year:</b> {{location}}</p>
-
-		<p id="desp" style="text-align:center;" > The missions of the Strategic Homeland Intervention, Enforcement and Logistics Division.</p>
-               </div></td></table>	
-			   <br>
-			   <br>
-			   <br><br><br><br>
-			   <br>
-			  {% for resultss in comments_list %} 
-			   <h2>{{resultss}}</h2><br>
-			  {% endfor %}
-			   
-			   <!--
-			   <br>
-			   <p>Dharcalias: RT @uhxkatie: I really wish the Agents of Shield tv show was better. It really had alot of potential.</p>
-				<hr>
-
-				<p>iagbegreg: Ghost hitchhiker from Haunted Mansion deeply concerned about season closer for Agents of Shield. Says he knows things.</p>
-				<hr>
-
-				<p>uhxkatie: I really wish the Agents of Shield tv show was better. It really had alot of potential.</p>
-				<hr>
-
-				<p>MrrPaco: And catching up on "Its always sunny" and "Agents of shield"</p>
-				-->
-				</textarea>
-           </div>
-       </article>
-      </div>
-    </div>
-</div>
-</section>
-
-<footer>
-  <div class="footerlink">
-    <p class="lf">Copyright &copy; 2013 <a href="#">Rotten Potatoes</a> - All Rights Reserved</p>
-   
-    <div style="clear:both;"></div>
-  </div>
-</footer>
-<!-- END PAGE SOURCE -->
-
+	<head>
+		<title>Rotten Potatoes</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="css/reset.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/layout.css" type="text/css" media="all">
+		<link rel="stylesheet" href="css/style.css" type="text/css" media="all">
+		<link href="themes/1/js-image-slider.css" rel="stylesheet" type="text/css" />
+		<script src="themes/1/js-image-slider.js" type="text/javascript"></script>
+		<script type="text/javascript" src="js/jquery-1.4.2.min.js" ></script>
+		<script src="js/rollover.js" type="text/javascript"></script>
+		<script type="text/javascript" src="js/script.js"></script>
+		<script type="text/javascript">
+			function get_more_info(source_image, tv_shows, year, plot, index)
+			{
+			document.getElementById("big_cover").src = source_image;
+			document.getElementById("title").innerHTML  = tv_shows;
+			document.getElementById("year").innerHTML  = "Year: " + year;
+			document.getElementById("plot").innerHTML  = plot;
+			switch(index) {
+			case '0':
+			    document.getElementById("plot").innerHTML  = "{{results_list[0].plot}}";
+			    document.getElementById("tw1").innerHTML  = "{{comments_list[0][0]}}";
+			    document.getElementById("tw2").innerHTML  = "{{comments_list[0][1]}}";
+			    document.getElementById("tw3").innerHTML  = "{{comments_list[0][2]}}";
+			    document.getElementById("tw4").innerHTML  = "{{comments_list[0][3]}}";
+			    document.getElementById("tw5").innerHTML  = "{{comments_list[0][4]}}";
+			    break;
+			case '1':
+			    document.getElementById("plot").innerHTML  = "{{results_list[1].plot}}";
+			    document.getElementById("tw1").innerHTML  = "{{comments_list[1][0]}}";
+			   document.getElementById("tw2").innerHTML  = "{{comments_list[1][1]}}";
+			    document.getElementById("tw3").innerHTML  = "{{comments_list[1][2]}}";
+			    document.getElementById("tw4").innerHTML  = "{{comments_list[1][3]}}";
+			    document.getElementById("tw5").innerHTML  = "{{comments_list[1][4]}}";
+			    break;
+			case '2':
+			    document.getElementById("plot").innerHTML  = "{{results_list[2].plot}}";
+			    document.getElementById("tw1").innerHTML  = "{{comments_list[2][0]}}";
+			    document.getElementById("tw2").innerHTML  = "{{comments_list[2][1]}}";
+			    document.getElementById("tw3").innerHTML  = "{{comments_list[2][2]}}";
+			    document.getElementById("tw4").innerHTML  = "{{comments_list[2][3]}}";
+			    document.getElementById("tw5").innerHTML  = "{{comments_list[2][4]}}";
+			    break;
+			case '3':
+			    document.getElementById("plot").innerHTML  = "{{results_list[3].plot}}";
+			    document.getElementById("tw1").innerHTML  = "{{comments_list[3][0]}}";
+			    document.getElementById("tw2").innerHTML  = "{{comments_list[3][1]}}";
+			    document.getElementById("tw3").innerHTML  = "{{comments_list[3][2]}}";
+			    document.getElementById("tw4").innerHTML  = "{{comments_list[3][3]}}";
+			    document.getElementById("tw5").innerHTML  = "{{comments_list[3][4]}}";
+			    break;
+			case '4':
+			    document.getElementById("plot").innerHTML  = "{{results_list[4].plot}}";
+			    document.getElementById("tw1").innerHTML  = "{{comments_list[4][0]}}";
+			    document.getElementById("tw2").innerHTML  = "{{comments_list[4][1]}}";
+			    document.getElementById("tw3").innerHTML  = "{{comments_list[4][2]}}";
+			    document.getElementById("tw4").innerHTML  = "{{comments_list[4][3]}}";
+			    document.getElementById("tw5").innerHTML  = "{{comments_list[4][4]}}";
+			    break;
+			}
+			}
+		</script>
+		<!--[if lt IE 7]>
+		<link rel="stylesheet" href="css/ie6.css" type="text/css" media="screen">
+		<script type="text/javascript" src="js/ie_png.js"></script>
+		<script type="text/javascript">ie_png.fix('.png, h1 a, .box');</script>
+		<![endif]-->
+		<!--[if lt IE 9]><script type="text/javascript" src="js/html5.js"></script><![endif]-->
+	</head>
+	<body id="page1" >
+		<!-- START PAGE SOURCE -->
+		<header>
+			<div style="height:235px;width:100%;">
+				<img src="newimage/logot.gif" style="position:relative; top: 110px; left: 20px; height: 111px; width: 545px;" />
+			
+			<div style="position:relative; right: 130px;height:130px;text-align:right">
+				<!--  <form action="#" id="search-form">-->
+				<!--<span style="position:relative">--->
+				<form action="/result?tv_show={{ tv_show }}&location={{ location }}" method="get">
+					TV show: 
+					<select size="5" name="tv_show"/>
+						<option>Agents Of SHIELD</option>
+						<option selected>American Horror Story</option>
+						<option>Arrow</option>
+						<option>Boardwalk Empire</option>
+						<option>Bones</option>
+						<option>Breaking Bad</option>
+						<option>Castle</option>
+						<option>Criminal Minds</option>
+						<option>Dexter</option>
+						<option>Doctor Who</option>
+						<option>Downton Abbey</option>
+						<option>Dracula</option>
+						<option>Game Of Thrones</option>
+						<option>Glee</option>
+						<option>Grays Anatomy</option>
+						<option>Homeland</option>
+						<option>How I Met Your Mother</option>
+						<option>Masters Of Sex</option>
+						<option>Modern Family</option>
+						<option>NCIS</option>
+						<option>New Girl</option>
+						<option>Once Upon A Time</option>
+						<option>Once Upon A Time In Wonderland</option>
+						<option>Orange Is The New Black</option>
+						<option>Person Of Interest</option>
+						<option>Pretty Little Liars</option>
+						<option>Ravenswood</option>
+						<option>Reign</option>
+						<option>Revenge</option>
+						<option>Revolution</option>
+						<option>Scandal</option>
+						<option>Sherlock</option>
+						<option>Sleepy Hollow</option>
+						<option>Sons Of Anarchy</option>
+						<option>Suits</option>
+						<option>Supernatural</option>
+						<option>The Big Bang Theory</option>
+						<option>The Blacklist</option>
+						<option>The Carrie Diaries</option>
+						<option>The Mentalist</option>
+						<option>The Originals</option>
+						<option>The Tomorrow People</option>
+						<option>The Vampire Diaries</option>
+						<option>The Walking Dead</option>
+						<option>True Blood</option>
+						<option>True Detective</option>
+						<option>Under The Dome</option>
+						<option>White Collar</option>
+						<option>Witches Of East End</option>
+					</select>
+					Location: 
+					<select name="location">
+						<option value="NY">New York</option>
+						<option value="LA">Los Angeles</option>
+						<option value="CH">Chicago</option>
+						<option value="HO">Houston</option>
+						<option value="PH">Philadelphia</option>
+					</select>
+					<input type="submit" value="Search">
+				</form>
+				<!-- </form>-->
+			</div></div>
+			<nav>
+				<ul>
+					<li><a href="index.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('m1','','images/m1-act.gif',1)"><img src="images/m1.gif" id="m1"></a></li>
+					<li><a href="about-us.html" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('m2','','images/m2-act.gif',1)"><img src="images/m2.gif" id="m2"></a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="content">
+			<div class="container">
+				<div class="inside">
+					<div class="wrapper">
+						<div style="position:relative; top: 0px; left: 83px; height: 410px; width:300;">
+							<article class="col-1">
+								<img src="images/1page-title1.gif" class="title">
+								<ul class="list">
+									{% for result in results_list %}
+									<li><a href="#"  onclick="get_more_info('{{ result.big_cover }}', '{{result.title}}', '{{result.year}}', '{{result.plot}}', '{{loop.index-1}}');"><img src={{ result.small_cover }}   style="width:80px; height:100px">{{ result.title }}</a></li>
+									{% endfor %}
+								</ul>
+							</article>
+						</div>
+						<article class="col-2">
+							<div style="position:relative; top: -480px; left: 83px; height: 680px;" >
+								<table>
+									<tr>
+										<td>
+											<img  id= "big_cover" alt="" src={{ results_list[0].big_cover }} style="position:relative; top: 71px; left: 6px; width: 180px; height:240px" />
+										</td>
+										<td>
+											<div align="center" style="position:relative; left: 20px; height:340px">
+												<br><br><br><br><br>
+												<h2 id ="title"><b>{{ results_list[0].title }}</b></h2>
+												<br><br>
+												<p id="year"><b>Year: </b>{{ results_list[0].year }}</p>
+                                                <br>
+												<p id="plot" style="text-align:center;" >{{ results_list[0].plot }}</p>
+											</div>
+										</td>
+								<tr><td colspan="2">
+								<ul class="list">
+									<li id="tw1">{{comments_list[0][0]}}</li>
+									<li id="tw2">{{comments_list[0][1]}}</li>
+									<li id="tw3">{{comments_list[0][2]}}</li>
+									<li id="tw4">{{comments_list[0][3]}}</li>
+									<li id="tw5">{{comments_list[0][4]}}</li>
+								</ul>
+                                </td></tr>
+                                </table>
+							</div>
+						</article>
+					</div>
+				</div>
+			</div>
+		</section>
+		<footer>
+			<div class="footerlink">
+				<p class="lf">Copyright &copy; 2013 <a href="#">Rotten Potatoes</a> - All Rights Reserved</p>
+				<div style="clear:both;"></div>
+			</div>
+		</footer>
+		<!-- END PAGE SOURCE -->
 </html>
 {% endautoescape %}

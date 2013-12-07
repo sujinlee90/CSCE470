@@ -17,17 +17,12 @@ handlers:
   static_dir: newimage
 - url: /themes
   static_dir: themes
-- url: /NewYork_tweets
-  static_dir: NewYork_tweets
-- url: /LosAngeles_tweets
-  static_dir: LosAngeles_tweets
-- url: /Chicago_tweets
-  static_dir: Chicago_tweets
-- url: /Houston_tweets
-  static_dir: Houston_tweets
-- url: /Philadelphia_tweets
-  static_dir: Philadelphia_tweets
 
+- url: /Pictures
+  static_dir: Pictures
+
+- url: /index\.html
+  script: test.application
 - url: /.*
   script: test.application
   

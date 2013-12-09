@@ -137,13 +137,14 @@ class Recommender():
         #multiply 0.000001 for total tweets
         for n in range(0, len(self.list_tvshows)):
             self.total_tweets[n] = self.total_tweets[n] * 0.000001
+            self.sum_tvshows[n] = self.sum_tvshows[n] + self.total_tweets[n]
 
         #find user who mentioned the tv show and mentioned more than or equal to two tv shows
         for user, tv_show_n_mentions in self.users.iteritems():
             if tv_show_n_mentions[tv_show_index] != 0:
                 if self.count_dif_tvshows(tv_show_n_mentions) > 1:
                     for i in range(0, len(self.list_tvshows)):
-                        self.sum_tvshows[i] = self.sum_tvshows[i] + tv_show_n_mentions[i] + self.total_tweets[i]
+                        self.sum_tvshows[i] = self.sum_tvshows[i] + tv_show_n_mentions[i]
 
     def get_user_mentions_tvshow(self, tv_show):
         """
@@ -244,4 +245,4 @@ class Recommender():
          
 if __name__ == "__main__":
     rec = Recommender()
-    print rec.recommend_tvshows("Dexter", "NY")
+    print rec.recommend_tvshows("Grays Anatomy", "HO")

@@ -47,6 +47,7 @@ class Recommender():
         """
         
         self.sum_tvshows = [0]*len(self.list_tvshows)
+        self.total_tweets= [0]*len(self.list_tvshows)   # count total nubmer of tweets for each tv shows
         self.tweet_text = {}
     
     def process_tweets(self, data, index):
@@ -61,6 +62,7 @@ class Recommender():
                     self.users[username] = [0]*len(self.list_tvshows)
                 #Adding a mention to the respective TV show (indicated by the index)
                 self.users[username][index] += 1
+                self.total_tweets[index] += 1
                 text = tweet['text']
                 if not self.tweet_text.has_key(index):
                     self.tweet_text[index] = []
@@ -132,12 +134,16 @@ class Recommender():
         tv_show_index = self.list_tvshows.index(tv_show)
         print  "tv_show_index = ", tv_show_index, tv_show
 
+        #multiply 0.000001 for total tweets
+        for n in range(0, len(self.list_tvshows)):
+            self.total_tweets[n] = self.total_tweets[n] * 0.000001
+
         #find user who mentioned the tv show and mentioned more than or equal to two tv shows
         for user, tv_show_n_mentions in self.users.iteritems():
             if tv_show_n_mentions[tv_show_index] != 0:
                 if self.count_dif_tvshows(tv_show_n_mentions) > 1:
                     for i in range(0, len(self.list_tvshows)):
-                        self.sum_tvshows[i] = self.sum_tvshows[i] + tv_show_n_mentions[i]
+                        self.sum_tvshows[i] = self.sum_tvshows[i] + tv_show_n_mentions[i] + self.total_tweets[i]
 
     def get_user_mentions_tvshow(self, tv_show):
         """

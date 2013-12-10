@@ -60,6 +60,7 @@ class Recommender():
         """
         
         self.sum_tvshows = [0]*len(self.list_tvshows)
+        self.total_tweets= [0]*len(self.list_tvshows)   # count total nubmer of tweets for each tv shows
         self.tweet_text = {}
     
     def process_tweets(self, data, index):
@@ -74,6 +75,7 @@ class Recommender():
                     self.users[username] = [0]*len(self.list_tvshows)
                 #Adding a mention to the respective TV show (indicated by the index)
                 self.users[username][index] += 1
+                self.total_tweets[index] += 1
                 text = tweet['text']
                 if not self.tweet_text.has_key(index):
                     self.tweet_text[index] = []
@@ -143,7 +145,11 @@ class Recommender():
         """
         #find index for tv show the user searches
         tv_show_index = self.list_tvshows.index(tv_show)
-        print  "tv_show_index = ", tv_show_index, tv_show
+
+        #multiply 0.000001 for total tweets
+        for n in range(0, len(self.list_tvshows)):
+            self.total_tweets[n] = self.total_tweets[n] * 0.000001
+            self.sum_tvshows[n] = self.sum_tvshows[n] + self.total_tweets[n]
 
         #find user who mentioned the tv show and mentioned more than or equal to two tv shows
         for user, tv_show_n_mentions in self.users.iteritems():
@@ -165,7 +171,7 @@ class Recommender():
             text = self.tweet_text[tvshow_index][i]['text']
             text = text.replace("'", "")
             text = text.replace("\n", "")
-            result.append('User:' + self.tweet_text[tvshow_index][i]['user'] + ', Text:' + text)
+            result.append(self.tweet_text[tvshow_index][i]['user'] + ': ' + text)
         return result
 
     def get_folder_name(self, location):
@@ -209,21 +215,18 @@ class Recommender():
         #sort tv shows by reverse order
         sorted_tvshows = list(sorted(dic_tvshows, key = dic_tvshows.__getitem__, reverse = True))
         
+        """
         print "\nTop 5 TV shows recommended for Breaking Bad with the number of users that talked about that TV show and Breaking Bad:"
         for item in enumerate(sorted(dic_tvshows.iteritems(), key = operator.itemgetter(1), reverse = True)[:5]):
             print item
         print "\nSome tweets about the first TV show:\n"
+        """
         
         #find users who mentioned tv shows in ranking top 5 and print users' text
-        print self.get_user_mentions_tvshow(sorted_tvshows[0]) #print users' mention for top 1
+        #print self.get_user_mentions_tvshow(sorted_tvshows[0]) #print users' mention for top 1
         
         index = self.list_tvshows.index(sorted_tvshows[0])
         file_name = self.get_file_name(dic_tvshows.keys()[0])
-        #print self.get_tv_show_info(self.tv_shows_info[index]["id"], file_name)#self.tv_shows_info[index]["id"])
-        #self.print_user_mentions_tvshow(sorted_tvshows.keys()[1]) #print users' mention for top 2
-        #self.print_user_mentions_tvshow(sorted_tvshows.keys()[2]) #print users' mention for top 3
-        #self.print_user_mentions_tvshow(sorted_tvshows.keys()[3]) #print users' mention for top 4
-        #self.print_user_mentions_tvshow(sorted_tvshows.keys()[4]) #print users' mention for top 5
         
         #Returning the list of recommended TV shows
         result = []
@@ -266,7 +269,7 @@ class Result(webapp2.RequestHandler):
         tv_show = self.request.get('tv_show')
         location = self.request.get('location')
         
-        print "Tvshow: ", tv_show
+        #print "Tvshow: ", tv_show
         
         rec = Recommender()
         result = rec.recommend_tvshows(tv_show, location)

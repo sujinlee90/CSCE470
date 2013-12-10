@@ -132,7 +132,6 @@ class Recommender():
         """
         #find index for tv show the user searches
         tv_show_index = self.list_tvshows.index(tv_show)
-        print  "tv_show_index = ", tv_show_index, tv_show
 
         #multiply 0.000001 for total tweets
         for n in range(0, len(self.list_tvshows)):
@@ -159,7 +158,7 @@ class Recommender():
             text = self.tweet_text[tvshow_index][i]['text']
             text = text.replace("'", "")
             text = text.replace("\n", "")
-            result.append('User:' + self.tweet_text[tvshow_index][i]['user'] + ', Text:' + text)
+            result.append(self.tweet_text[tvshow_index][i]['user'] + ': ' + text)
         return result
 
     def get_folder_name(self, location):
